@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netflix - Watch Movies & Shows</title>
+
+<style>
+
+/* GLOBAL RESET */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #080808;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+
+/* NAVBAR */
+
+.navbar {
+    width: 100%;
+    padding: 20px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    z-index: 100;
+    animation: slideDown 1s ease;
+}
+
+.logo {
+    color: #e50914;
+    font-size: 35px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.logo:hover {
+    transform: scale(1.08);
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #ddd;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search {
+    background: transparent;
+    color: white;
+    border: 1px solid #aaa;
+    padding: 9px 12px;
+    border-radius: 4px;
+    width: 130px;
+    transition: 0.4s;
+}
+
+.search:focus {
+    width: 190px;
+    border-color: white;
+    outline: none;
+}
+
+.sign-in {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 10px 19px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sign-in:hover {
+    background: #b20710;
+    transform: scale(1.05);
+}
+
+/* HERO SECTION */
+
+.hero {
+    height: 90vh;
+    min-height: 600px;
+    background:
+        linear-gradient(to right, #080808 5%, transparent 75%),
+        linear-gradient(to top, #080808 2%, transparent 65%),
+        url("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=2000") center/cover;
+    display: flex;
+    align-items: center;
+    padding: 0 7%;
+    position: relative;
+}
+
+.hero-content {
+    max-width: 570px;
+    animation: fadeUp 1.3s ease;
+}
+
+.tag {
+    color: #e50914;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 7vw, 85px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.hero p {
+    font-size: 17px;
+    color: #ddd;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 13px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.play {
+    background: white;
+    color: black;
+}
+
+.info {
+    background: rgba(100,100,100,0.7);
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-4px);
+    filter: brightness(0.85);
+}
+
+/* MOVIE SECTIONS */
+
+.movie-section {
+    padding: 25px 5%;
+    margin-top: 15px;
+}
+
+.section-title {
+    font-size: 25px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.movie-row {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 12px 5px 25px;
+    scrollbar-width: thin;
+    scrollbar-color: #555 #111;
+}
+
+.movie-row::-webkit-scrollbar {
+    height: 5px;
+}
+
+.movie-row::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+.movie-card {
+    flex: 0 0 210px;
+    height: 300px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    animation: fadeUp 1s ease both;
+}
+
+.movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.movie-card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 30px rgba(229,9,20,0.3);
+    z-index: 5;
+}
+
+.movie-card:hover img {
+    transform: scale(1.12);
+}
+
+.movie-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 40px 12px 15px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.95));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.movie-card:hover .movie-overlay {
+    opacity: 1;
+}
+
+.movie-overlay h3 {
+    font-size: 16px;
+    margin-bottom: 7px;
+}
+
+.movie-overlay p {
+    font-size: 12px;
+    color: #ccc;
+}
+
+/* FEATURE SECTION */
+
+.feature {
+    margin: 70px 5%;
+    min-height: 300px;
+    background:
+        linear-gradient(to right, #000 10%, transparent),
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600") center/cover;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 45px;
+    overflow: hidden;
+    transition: 0.4s;
+}
+
+.feature:hover {
+    transform: scale(1.015);
+}
+
+.feature-content {
+    max-width: 450px;
+}
+
+.feature h2 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.feature p {
+    color: #ddd;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* FOOTER */
+
+footer {
+    background: #080808;
+    border-top: 1px solid #222;
+    padding: 50px 8%;
+    color: #888;
+}
+
+.footer-title {
+    color: #ddd;
+    margin-bottom: 25px;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.footer-links a {
+    color: #888;
+    font-size: 13px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.copyright {
+    margin-top: 40px;
+    font-size: 12px;
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(35px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* TABLET RESPONSIVENESS */
+
+@media (max-width: 900px) {
+
+    .navbar {
+        padding: 18px 4%;
+    }
+
+    .nav-links {
+        gap: 12px;
+    }
+
+    .search {
+        width: 100px;
+    }
+
+    .movie-card {
+        flex-basis: 180px;
+        height: 260px;
+    }
+
+    .hero {
+        height: 80vh;
+    }
+
+    .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        padding: 15px 5%;
+        flex-wrap: wrap;
+        gap: 15px;
+        background: rgba(0,0,0,0.5);
+    }
+
+    .logo {
+        font-size: 26px;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        gap: 20px;
+        padding-bottom: 5px;
+    }
+
+    .nav-links a {
+        white-space: nowrap;
+        font-size: 12px;
+    }
+
+    .nav-right {
+        gap: 8px;
+        margin-left: auto;
+    }
+
+    .search {
+        display: none;
+    }
+
+    .sign-in {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .hero {
+        min-height: 620px;
+        height: 85vh;
+        align-items: flex-end;
+        padding: 0 6% 65px;
+        background-position: center;
+    }
+
+    .hero h1 {
+        font-size: 43px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .tag {
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 11px 17px;
+        font-size: 13px;
+    }
+
+    .movie-section {
+        padding: 20px 4%;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .movie-card {
+        flex-basis: 145px;
+        height: 215px;
+    }
+
+    .movie-overlay {
+        opacity: 1;
+    }
+
+    .feature {
+        margin: 40px 4%;
+        padding: 25px;
+        min-height: 260px;
+    }
+
+    .feature h2 {
+        font-size: 27px;
+    }
+
+    .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    footer {
+        padding: 35px 6%;
+    }
+}
+
+/* SMALL PHONES */
+
+@media (max-width: 360px) {
+
+    .hero h1 {
+        font-size: 35px;
+    }
+
+    .movie-card {
+        flex-basis: 125px;
+        height: 190px;
+    }
+
+    .nav-links {
+        gap: 13px;
+    }
+}
+
+/* REDUCED MOTION ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<header class="navbar">
+
+    <div class="logo">NETFLIX</div>
+
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#trending">Trending</a></li>
+        <li><a href="#movies">Movies</a></li>
+        <li><a href="#series">TV Shows</a></li>
+        <li><a href="#footer">My List</a></li>
+    </ul>
+
+    <div class="nav-right">
+        <input class="search" type="text" placeholder="Search...">
+        <button class="sign-in">Sign In</button>
+    </div>
+
+</header>
+
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="tag">NETFLIX ORIGINAL</div>
+
+        <h1>Into The Wild</h1>
+
+        <p>
+            Enter a world of mystery, adventure and unforgettable
+            stories. Discover extraordinary journeys and explore
+            the unknown in this cinematic experience.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="btn play">▶ Play Now</button>
+
+            <button class="btn info">ⓘ More Info</button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- TRENDING SECTION -->
+
+<section class="movie-section" id="trending">
+
+    <h2 class="section-title">🔥 Trending Now</h2>
+
+    <div class="movie-row">
+
+        <div class="movie-card">
+            <img src="itw.jpg" alt="Adventure">
+            <div class="movie-overlay">
+                <h3>Into The Wild</h3>
+                <p>Adventure • 2026</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="dh.jpg" alt="Night sky">
+            <div class="movie-overlay">
+                <h3>Dark Horizon</h3>
+                <p>Sci-Fi • 2026</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="lw.jpg" alt="Nature">
+            <div class="movie-overlay">
+                <h3>Lost World</h3>
+                <p>Adventure • 2025</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="be.jpg" alt="Mountains">
+            <div class="movie-overlay">
+                <h3>Beyond Earth</h3>
+                <p>Drama • 2026</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="tforest.jpg" alt="Forest">
+            <div class="movie-overlay">
+                <h3>The Forest</h3>
+                <p>Mystery • 2025</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="wj.webp" alt="Landscape">
+            <div class="movie-overlay">
+                <h3>Wild Journey</h3>
+                <p>Adventure • 2026</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURE BANNER -->
+
+<section class="feature">
+
+    <div class="feature-content">
+
+        <div class="tag">FEATURED SERIES</div>
+
+        <h2>Discover New Worlds</h2>
+
+        <p>
+            Every story has a beginning. Every adventure has
+            a destination. Start watching something extraordinary.
+        </p>
+
+        <button class="btn play">▶ Explore Now</button>
+
+    </div>
+
+</section>
+
+
+<!-- MOVIE SECTION -->
+
+<section class="movie-section" id="movies">
+
+    <h2 class="section-title">🎬 Popular Movies</h2>
+
+    <div class="movie-row">
+
+        <div class="movie-card">
+            <img src="IMG1.jpg" alt="Mountains">
+            <div class="movie-overlay">
+                <h3>Beauty and beast</h3>
+                <p>Romance.2023</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="img5.jpg" alt="Space">
+            <div class="movie-overlay">
+                <h3>pursuit of happiness</h3>
+                <p>emo• 2022</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="img2.jpg" alt="Sunset">
+            <div class="movie-overlay">
+                <h3>legend</h3>
+                <p>Action • 2025</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="img4.jpg" alt="Ocean">
+            <div class="movie-overlay">
+                <h3>Alpha</h3>
+                <p>Drama • 2026</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="imag3.avif" alt="Forest">
+            <div class="movie-overlay">
+                <h3>Shawshank</h3>
+                <p>Thriller • 2025</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- SERIES SECTION -->
+
+<section class="movie-section" id="series">
+
+    <h2 class="section-title">⭐ Popular TV Shows</h2>
+
+    <div class="movie-row">
+
+        <div class="movie-card">
+            <img src="pos1.jpg" alt="Landscape">
+            <div class="movie-overlay">
+                <h3>FROM</h3>
+               
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="pos2.jpg" alt="Sky">
+            <div class="movie-overlay">
+                <h3>Penny dreadful</h3>
+               
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="pos3.jpg" alt="Lake">
+            <div class="movie-overlay">
+                <h3>Aspirants</h3>
+               
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <img src="pos4.jpg" alt="Nature">
+            <div class="movie-overlay">
+                <h3>Home before dark</h3>
+                
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer id="footer">
+
+    <h3 class="footer-title">Questions? Contact us.</h3>
+
+    <div class="footer-links">
+
+        <a href="#">FAQ</a>
+        <a href="#">Help Centre</a>
+        <a href="#">Account</a>
+        <a href="#">Media Centre</a>
+        <a href="#">Investor Relations</a>
+        <a href="#">Jobs</a>
+        <a href="#">Ways to Watch</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Privacy</a>
+        <a href="#">Cookie Preferences</a>
+        <a href="#">Corporate Information</a>
+        <a href="#">Contact Us</a>
+
+    </div>
+
+    <p class="copyright">
+        © 2026 Netflix Clone. Created for educational purposes.
+    </p>
+
+</footer>
+
+</body>
+</html>
