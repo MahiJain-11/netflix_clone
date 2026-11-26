@@ -5,7 +5,7 @@ A fully responsive Netflix-inspired landing page built using **HTML5 and CSS3**.
 
 ## 🌐 Live Demo
 
-[View Live Website](YOUR_DEPLOYED_LINK_HERE)
+[View Live Website](https://netflixclone11.tiiny.site)
 
 ## 📸 Features
 
